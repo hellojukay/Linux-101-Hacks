@@ -1,0 +1,54 @@
+%-*- coding UTF8 -*-
+% capter1.tex
+% 勾股定理
+% author: hellojukay
+
+\documentclass[UTF8]{ctexart}
+
+\title{第一章:强大的 cd 命令}
+\author{hellojukay}
+
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=bash,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=3
+}
+
+
+\begin{document}
+\maketitle
+cd 命令是 unix 里面使用频率最高的命令之一，本章讲介绍 6 个非常有用
+的技巧来提高我们切换目录的效率。
+
+\section*{技巧1:定义 CDPATH 环境变量}
+cd 命令最常用的就是进入某个文件夹，然后进入他的子目录，定义 CDPATH 环
+境变量，能让我们不指定完整目录的情况下直接进入某个目录，见如下:
+\begin{lstlisting}
+    hellojukay@local linux101hack $ cd apt
+    bash: cd: apt: 没有那个文件或目录
+    hellojukay@local linux101hack $ export CDPATH=/etc
+    hellojukay@local linux101hack $ cd apt
+    /etc/apt
+    hellojukay@local apt $ pwd
+    /etc/apt
+    hellojukay@local apt $ 
+\end{lstlisting}
+\end{document}
