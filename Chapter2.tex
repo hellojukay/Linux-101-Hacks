@@ -1,0 +1,183 @@
+%-*- coding UTF8 -*-
+% Chapter2.tex
+% author: hellojukay
+
+\documentclass[UTF8]{ctexart}
+
+\title{第一章:时间日期相关操作}
+\author{hellojukay}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=bash,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+\begin{document}
+
+\section*{技巧7：设置系统日期和时间}
+
+改变系统的日期和时间，使用如下命令（修改之前最好手动关闭 NTP 自动同步：sudo timedatectl set-ntp false）:
+\begin{lstlisting}
+# 修改系统日期，时间需要使用 root 权限
+date {mmddhhmiyyyy.ss}
+\end{lstlisting}
+\begin{itemize}
+    \item mm 月份
+    \item dd 日期
+    \item hh 小时
+    \item mi 分钟
+    \item yyyy 年份
+    \item ss 秒钟
+\end{itemize}
+例如：要将日期设置为 2008 年 1 月 31 日 10 点
+19 分 53 秒:
+\begin{lstlisting}
+± |master U:1 ?:2 ✗| → sudo date 0131192008.53                                                                                                                               
+2008年 01月 31日 星期四 19:20:53 CST
+
+ 2008-01-31 19:20:56 ⌚  local in ~/github/Linux-101-Hacks
+± |master U:1 ?:2 ✗| → date
+2008年 01月 31日 星期四 19:20:57 CST
+    
+\end{lstlisting}
+你也可以向下面一样，通过给定参数的方式来设置日期:
+\begin{lstlisting}
+date 013122192009.53
+date +%Y%m%d -s "20090131"
+date -s "01/31/2009 22:19:53"
+date -s "31 JAN 2009 22:19:53"
+\end{lstlisting}
+只修改时间，不修改日期:
+\begin{lstlisting}
+date +%T -s "22:19:53"
+date +%T%p -s "10:19:53PM"
+\end{lstlisting}
+
+\begin{quote}
+    \small{自动同步日期和时间，可以使用 NTP 服务：sudo timedatectl set-ntp true}
+\end{quote}
+
+
+\section*{技巧8: 修改硬件日期和时间}
+
+设置系统硬件时间之前，请确保当前系统时间已经设置正确，设置硬件的日期和
+时间使用如下命令:
+\begin{lstlisting}
+hwclock –systohc
+hwclock --systohc –utc
+\end{lstlisting}
+不加任何参数调用 hwclock 命令表示查看当前硬件的日期和时间
+\begin{lstlisting}
+# 如果你不是 root 用户， 请加上 sudo 
+hwclock
+\end{lstlisting}
+检查当前硬件时间是否设置为 UTC 时间使用如下命令:
+\begin{lstlisting}
+# 如果文件不存在，则可以手动创建之
+cat /etc/sysconfig/clock
+ZONE="America/Los_Angeles"
+UTC=false
+ARC=false
+\end{lstlisting}
+
+
+\section*{技巧9: 格式化显示日期和时间}
+这里有好几种方法格式化显示日期和时间:
+\begin{lstlisting}
+2019-07-29 09:56:58 ⌚  local in ~/github/Linux-101-Hacks                                                                                                                    
+± |master U:1 ?:2 ✗| → date                                                                                                                                                   
+2019年 07月 29日 星期一 10:00:09 CST                                                                                                                                          
+                                                                                                                                                                              
+ 2019-07-29 10:00:09 ⌚  local in ~/github/Linux-101-Hacks                                                                                                                    
+± |master U:1 ?:2 ✗| → date --date="now"                                                                                                                                      
+2019年 07月 29日 星期一 10:00:20 CST                                                                                                                                          
+                                                                                                                                                                              
+ 2019-07-29 10:00:20 ⌚  local in ~/github/Linux-101-Hacks
+2019-07-29 09:56:58 ⌚  local in ~/github/Linux-101-Hacks                                                                                                                    
+± |master U:1 ?:2 ✗| → date                                                                                                                                                   
+2019年 07月 29日 星期一 10:00:09 CST                                                                                                                                          
+                                                                                                                                                                              
+ 2019-07-29 10:00:09 ⌚  local in ~/github/Linux-101-Hacks                                                                                                                    
+± |master U:1 ?:2 ✗| → date --date="now"                                                                                                                                      
+2019年 07月 29日 星期一 10:00:20 CST                                                                                                                                          
+                                                                                                                                                                              
+ 2019-07-29 10:00:20 ⌚  local in ~/github/Linux-101-Hacks                                                                                                                    
+± |master U:1 ?:2 ✗| → date --date="today"
+2019年 07月 29日 星期一 10:00:33 CST
+
+ 2019-07-29 10:00:33 ⌚  local in ~/github/Linux-101-Hacks
+± |master U:1 ?:2 ✗| → date --date='1970-01-01 00:00:01 UTC +5 hours' +%s
+18001
+
+± |master U:1 ?:2 ✗| → date '+Current Date: %m/%d/%y%nCurrent Time:%H:%M:%S'
+Current Date: 07/29/19
+Current Time:10:00:57
+\end{lstlisting}
+不同的命令行选择含义如下:
+\begin{itemize}
+    \item \%D : 日期(月/日/年)
+    \item \%d : 月份中的天数(01..31)
+    \item \%m : 一年中的月份(01..12)
+    \item \%y : 两位数的年份(00..99)
+    \item \%a : 本地化的星期简写(一..日)
+    \item \%A : 本地化的星期全称(星期一...星期日)
+    \item \%b : 本地化的月份简写(1月..12月)
+    \item \%B : 本地化的月份全称(一月..十二月)
+    \item \%H : 24小时制小时(01..23)
+    \item \%I : 12小时制度小时(01..11)
+    \item \%Y : 四位数年份(2019)
+\end{itemize}
+
+
+\section*{技巧10: 展示过去的日期和时间}
+一下方式能够展示过去的日期和时间:
+\begin{lstlisting}
+date --date='3 seconds ago'
+date --date="1 day ago"
+date --date="2 days ago"
+date --date="1 month ago"
+date --date="2 months ago"
+date --date="1 year ago"
+date --date="2 years ago"
+date --date="yesterday"
+date --date="10 months 2 day ago"
+\end{lstlisting}
+
+
+\section*{技巧11: 展示将来的日期和时间}
+一下方式能够展示将来的日期和时间:
+\begin{lstlisting}
+date --date='3 seconds'
+date --date='4 hours'
+date --date='tomorrow'
+date --date="1 day"
+date --date="2 days"
+date --date='1 month'
+date --date='2 months'
+date --date='1 week'
+date --date='2 weeks'
+date --date="2 years"
+date --date="next day"
+date --date="-1 days ago"
+date --date="this Wednesday"
+\end{lstlisting}
+\end{document}
