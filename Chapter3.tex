@@ -1,0 +1,78 @@
+%-*- coding UTF8 -*-
+% Chapter3.tex
+% author: hellojukay
+
+\documentclass[UTF8]{ctexart}
+
+\title{第三章: ssh client 使用技巧}
+\author{hellojukay}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=bash,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+
+
+\section*{技巧12: 查看 ssh client 版本}
+有些时候可能需要查看当前系统运行的 ssh client 的版本，可以使用 ssh -V (大写V)来查看版本
+情况，需要说明的是一般系统自带的 ssh client 都是 openssh 实现方式，例如我的 deepin 系统
+就是使用的 openssh:
+\begin{lstlisting}
+± |master U:1 ?:1 ✗| → ssh -V
+OpenSSH_7.7p1 Debian-2, OpenSSL 1.0.2o  27 Mar 2018
+\end{lstlisting}
+也有一些系统会使用 ssh2 的实现:
+\begin{lstlisting}
+$ ssh -V
+ssh: SSH Secure Shell 3.2.9.1 (non-commercial version)
+on i686-pc-linux-gnu
+\end{lstlisting}
+
+
+\section*{技巧13: 使用 ssh 登录远程服务器}
+当你第一次从本地登录远程服务器的时候，命令行展示 host key 没有找到，会让你输入 yes 才能继续，
+输入以后 host key 会被保存在本地的 \$HOME/.ssh/known\_host 文件中,当你第二次登录服务器的时候
+便不会在让你输入 yes 了，而是直接输入密码
+\begin{lstlisting}
+2019-07-30 13:26:24 ⌚  local in ~/github/Linux-101-Hacks
+± |master U:1 ?:1 ✗| → ssh licong@10.249.175.54
+Password:
+\end{lstlisting}
+如果当服务器的 host key 发生了改变，你在登录服务器的时候
+可能会收到警告提示信息，可能触发提示信息的原因有两个：
+\begin{itemize}
+    \item 有人升级了服务器的操作系统，或者重新安装了 openssh
+    \item 有人在服务器上执行了恶意操作等
+\end{itemize}
+这时候时候在输入 yes 之前，最好是先联系系统管理员，查明原因。
+
+
+\section*{技巧14:调试 ssh 链接}
+有些时候我们在诊断问题的时候希望能够看到服务器登录的调试系统，使用 ssh -v (小写v)选项
+来查看登录的 debug 日志信息
+\begin{lstlisting}
+ssh licong@10.95.58.31 -v 
+\end{lstlisting}
+\end{document}
