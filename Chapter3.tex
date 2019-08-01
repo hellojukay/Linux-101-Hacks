@@ -75,4 +75,60 @@ Password:
 \begin{lstlisting}
 ssh licong@10.95.58.31 -v 
 \end{lstlisting}
+
+
+\section*{技巧15: 本地与远程服务器 ssh　终端来回切换}
+有时候我们通过 ssh 登录要远程服务器，这个时候我们要在本地机器上执行一条命令，我们不得不
+退出登录，执行完毕以后，再次登录远程服务器。事实上，我们不必这样做，我们不需要断开 ssh　链接
+的会话，只需要秩序一下步骤即可:
+\begin{enumerate}
+  \item ssh 登录远程服务器 ssh licong@10.95.55.207
+  \item 输入 \char`\~
+  \item 按下 ctrl z
+\end{enumerate}
+这个时候你的终端应该已经自动切换到本地机器了
+\begin{lstlisting}
+  [licong@analysis01 ~]$ ~^Z [suspend ssh]
+
+  [1]+  已停止               ssh licong@10.95.55.207  
+\end{lstlisting}
+查看本地任务，有一个暂停的 ssh 任务
+\begin{lstlisting}
+  ± |master U:1 ✗| → jobs 
+  [1]+  已停止               ssh licong@10.95.55.207  
+\end{lstlisting}
+如果想要再次回到远程服务器的终端，只需要激活该任务即可
+\begin{lstlisting}
+fg %1
+\end{lstlisting}
+
+
+\section*{技巧16:统计 ssh 链接流量}
+当我们在使用 SSH2 的时候，我们可以通过特殊的的指令查看链接的流量信息,
+在终端输入  \char`\~s　即可：
+\begin{lstlisting}
+remotehost$ [Note: The ~s is not visible on the
+command line when you type.]
+remote host: remotehost
+local host: localhost
+remote version: SSH-1.99-OpenSSH_3.9p1
+local version: SSH-2.0-3.2.9.1 SSH Secure
+Shell (non-commercial)
+compressed bytes in: 1506
+uncompressed bytes in: 1622
+compressed bytes out: 4997
+uncompressed bytes out: 5118
+packets in: 15
+packets out: 24
+rekeys: 0
+Algorithms:
+Chosen key exchange algorithm: diffie-hellman-
+group1-sha1
+Chosen host key algorithm: ssh-dss
+Common host key algorithms: ssh-dss,ssh-rsa
+Algorithms client to server:
+Cipher: aes128-cbc
+MAC: hmac-sha1
+Compression: zlib
+\end{lstlisting}
 \end{document}
