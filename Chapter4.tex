@@ -1,0 +1,120 @@
+%-*- coding UTF8 -*-
+% Chapter4.tex
+% author: hellojukay
+
+\documentclass[UTF8]{ctexart}
+
+\title{第三章: 常用命令}
+\author{hellojukay}
+
+\usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=bash,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\section*{技巧17: grep}
+grep 命令常用来做文本搜索，他支持需要强大的命令行选项.语法格式如下:
+\begin{lstlisting}
+grep [options] pattern [files]  
+\end{lstlisting}
+\textbf{如何在文件中找到包含指定关键字的所有行?}\newline
+这个例子我们将在 /etc/passwd 文件中搜索关键字 hellojukay
+\begin{lstlisting}
+2019-08-05 09:17:32 ⌚  local in ~/github/Linux-101-Hacks
+± |master ✓| → grep hellojukay /etc/passwd
+hellojukay:x:1000:1000::/home/hellojukay:/bin/bash       
+\end{lstlisting}
+使用 -v 选项则匹配搜索不包含关键字的行，这个例子我们在 /et/passwd 文件
+中搜索不包含 hellojukay 的所有行:
+\begin{lstlisting}
+2019-08-05 09:27:45 ⌚  local in ~/github/Linux-101-Hacks                                                                                                                    
+± |master ?:1 ✗| → grep hellojukay /etc/passwd -v                                                                                                                             
+root:x:0:0:root:/root:/bin/bash                                                                                                                                               
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin                                                                                                                               
+bin:x:2:2:bin:/bin:/usr/sbin/nologin                                                                                                                                          
+sys:x:3:3:sys:/dev:/usr/sbin/nologin                                                                                                                                          
+sync:x:4:65534:sync:/bin:/bin/sync                                                                                                                                            
+games:x:5:60:games:/usr/games:/usr/sbin/nologin                                                                                                                               
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin                                                                                                                               
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin                                                                                                                                  
+mail:x:8:8:mail:/var/mail:/usr/sbin/nologin                                                                                                                                   
+news:x:9:9:news:/var/spool/news:/usr/sbin/nologin                                                                                                                             
+uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin                                                                                                                           
+proxy:x:13:13:proxy:/bin:/usr/sbin/nologin                                                                                                                                    
+www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin                                                                                                                          
+backup:x:34:34:backup:/var/backups:/usr/sbin/nologin                                                                                                                          
+list:x:38:38:Mailing List Manager:/var/list:/usr/sbin/nologin                                                                                                                 
+irc:x:39:39:ircd:/var/run/ircd:/usr/sbin/nologin                                                                                                                              
+gnats:x:41:41:Gnats Bug-Reporting System (admin):/var/lib/gnats:/usr/sbin/nologin                                                                                             
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin                                                                                                                    
+systemd-network:x:100:102:systemd Network Management,,,:/run/systemd/netif:/usr/sbin/nologin  
+\end{lstlisting}
+\textbf{统计文件中有多少行符合匹配规则的文本}\newline
+这里例子统计在 /etc/passwd 文件中有多少文件包含 hellojukay 关键字:
+\begin{lstlisting}
+2019-08-05 09:29:17 ⌚  local in ~/github/Linux-101-Hacks
+± |master ?:1 ✗| → grep hellojukay /etc/passwd -c
+1    
+\end{lstlisting}
+当然，可以使用 -vc 命令来统计不包含指定关键字的文本的行数总和。\newline
+\textbf{忽略大小写检索搜索文本}\newline
+使用 -i 选项能够无视大小写搜索字符串。
+\begin{lstlisting}
+    # grep -i john /etc/passwd
+    jsmith:x:1082:1082:John Smith:/home/jsmith:/bin/bash
+    jdoe:x:1083:1083:John Doe:/home/jdoe:/bin/bash
+\end{lstlisting}
+\textbf{如何递归搜索子文件夹中的文件？}\newline
+使用 -r 选了能够递归搜索子文件夹中文件，当然， -r 选项也能和以上所述选项一起使用，
+-ri , -rv　等等
+
+
+\section*{技巧18: find}
+find 命令也是经常会用在文件检索上的命令，看下他的使用语法:
+\begin{lstlisting}
+  find [pathnames] [conditions]
+\end{lstlisting}
+\textbf{如何找到文件名中包含指定关键字的文件?}\newline
+这个例子展示如何在 /etc 目录中查找文件中包含 ssh 的文件:
+\begin{lstlisting}
+  2019-08-05 09:54:05 ⌚  local in ~/github/Linux-101-Hacks
+  ± |master ?:2 ✗| → sudo find /etc -name "ssh"
+  /etc/init.d/ssh
+  /etc/default/ssh
+  /etc/ssh  
+\end{lstlisting}
+\textbf{如何查找文件体积大于某个数值的文件?}\newline
+这个例子展示查找 \$HOME 目录下体积大于100M的文件:
+\begin{lstlisting}
+   2019-08-05 09:57:13 ⌚  local in ~/github/Linux-101-Hacks
+± |master ?:2 ✗| → sudo find $HOME -size +100M
+/home/hellojukay/.vagrant.d/boxes/centos-VAGRANTSLASH-7/0/virtualbox/centos-7-1-1.x86_64.vmdk
+/home/hellojukay/.gradle/wrapper/dists/gradle-5.4-all/9q7zx9z650v1spbt032ijbiwh/gradle-5.4-all.zip
+/home/hellojukay/.gradle/caches/5.4.1/generated-gradle-jars/gradle-api-5.4.1.jar
+\end{lstlisting}
+\end{document} 2019-08-05 09:57:13 ⌚  local in ~/github/Linux-101-Hacks
+± |master ?:2 ✗| → sudo find $HOME -size +100M
+/home/hellojukay/.vagrant.d/boxes/centos-VAGRANTSLASH-7/0/virtualbox/centos-7-1-1.x86_64.vmdk
+/home/hellojukay/.gradle/wrapper/dists/gradle-5.4-all/9q7zx9z650v1spbt032ijbiwh/gradle-5.4-all.zip
+/home/hellojukay/.gradle/caches/5.4.1/generated-gradle-jars/gradle-api-5.4.1.jar
