@@ -109,12 +109,89 @@ find 命令也是经常会用在文件检索上的命令，看下他的使用语
 \begin{lstlisting}
    2019-08-05 09:57:13 ⌚  local in ~/github/Linux-101-Hacks
 ± |master ?:2 ✗| → sudo find $HOME -size +100M
-/home/hellojukay/.vagrant.d/boxes/centos-VAGRANTSLASH-7/0/virtualbox/centos-7-1-1.x86_64.vmdk
-/home/hellojukay/.gradle/wrapper/dists/gradle-5.4-all/9q7zx9z650v1spbt032ijbiwh/gradle-5.4-all.zip
-/home/hellojukay/.gradle/caches/5.4.1/generated-gradle-jars/gradle-api-5.4.1.jar
+gradle/caches/5.4.1/generated-gradle-jars/gradle-api-5.4.1.jar
 \end{lstlisting}
-\end{document} 2019-08-05 09:57:13 ⌚  local in ~/github/Linux-101-Hacks
-± |master ?:2 ✗| → sudo find $HOME -size +100M
-/home/hellojukay/.vagrant.d/boxes/centos-VAGRANTSLASH-7/0/virtualbox/centos-7-1-1.x86_64.vmdk
-/home/hellojukay/.gradle/wrapper/dists/gradle-5.4-all/9q7zx9z650v1spbt032ijbiwh/gradle-5.4-all.zip
-/home/hellojukay/.gradle/caches/5.4.1/generated-gradle-jars/gradle-api-5.4.1.jar
+\textbf{如何根据文件修改时间来查找文件?}\newline
+这个例子展示查找 60 天前下载的文件:
+\begin{lstlisting}
+  2019-08-08 12:59:02 ⌚  local in ~/github/Linux-101-Hacks
+  ± |master U:1 ✗| → find /home/hellojukay/Downloads/ -mtime +60
+  /home/hellojukay/Downloads/
+  /home/hellojukay/Downloads/SwitchyOmega_Chromium (1).crx
+  /home/hellojukay/Downloads/SwitchyOmega_Chromium.crx
+  /home/hellojukay/Downloads/Lanxin_Setup_6.5.15.600668.exe
+  /home/hellojukay/Downloads/code_1.30.2-1546901646_amd64.deb
+  /home/hellojukay/Downloads/goland-2018.3.2.tar.gz
+  /home/hellojukay/Downloads/FireShot
+  /home/hellojukay/Downloads/sonar-scanner-cli-3.0.3.778.zip
+  /home/hellojukay/Downloads/shadowsocks-deepin_1.2.2_amd64.deb
+  /home/hellojukay/Downloads/CentOS-7-x86_64-DVD-1810.iso  
+\end{lstlisting}
+这个例子展示查找 3 天内下载的文件:
+\begin{lstlisting}
+  2019-08-08 13:00:36 ⌚  local in ~/github/Linux-101-Hacks
+  ± |master U:1 ✗| → find /home/hellojukay/Downloads/ -mtime -3
+  /home/hellojukay/Downloads/
+  /home/hellojukay/Downloads/thinkocaml.pdf  
+\end{lstlisting}
+\textbf{如何找 tar.gz 结尾的文件，并且删除他们?}
+\begin{lstlisting}
+  find / -type f -name *.tar.gz -exec ls -l {} \;
+\end{lstlisting}
+\textbf{如何根据日期找到文件，并且按照日期压缩归档}
+\begin{lstlisting}
+find /home/jsmith -type f -mtime +60 | xargs tar -cvf
+/tmp/`date '+%d%m%Y'_archive.tar`
+\end{lstlisting}
+
+
+\section*{技巧19：标准输出与标准错误输出}
+\textbf{将标准输出重定向} \newline
+一些时候，我们执行脚本的时候，可能不想看到脚本的标准输出或者错误输出,
+我们可以将输出重定向到 /dev/null
+\begin{lstlisting}
+  Suppress standard output using > /dev/null
+\end{lstlisting}
+这个技巧在你 debugging 的时候非常有用:
+\begin{lstlisting}
+  ./start.sh > /dev/null
+\end{lstlisting}
+\textbf{将标准错误输出重定向} \newline
+当你不想看到标准错误输出的时候，这个功能也同样非常实用
+\begin{lstlisting}
+  ./shell-script.sh 2> /dev/null
+\end{lstlisting}
+
+
+\section*{技巧20:join命令}
+join 命令能合并两个文件中的字段，比如：我们将员工列表文件和工资列表文件合并：
+\begin{lstlisting}
+  $ cat employee.txt
+100
+200
+300
+400
+Jason Smith
+John Doe
+Sanjay Gupta
+Ashok Sharma
+$ cat bonus.txt
+100
+200
+300
+400
+$5,000
+$500
+$3,000
+$1,250
+$ join employee.txt bonus.txt
+100
+200
+300
+400
+Jason Smith $5,000
+John Doe $500
+Sanjay Gupta $3,000
+Ashok Sharma $1,250
+\end{lstlisting}
+\end{document}
