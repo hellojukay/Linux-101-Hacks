@@ -194,4 +194,61 @@ John Doe $500
 Sanjay Gupta $3,000
 Ashok Sharma $1,250
 \end{lstlisting}
+
+
+\section*{技巧21:拼写大小写转换}
+将文件内容转换称大写
+\begin{lstlisting}
+hellojukay@local Linux-101-Hacks (master) $ cat hello.txt 
+hello world
+hellojukay@local Linux-101-Hacks (master) $ tr a-z A-Z < hello.txt 
+HELLO WORLD
+hellojukay@local Linux-101-Hacks (master) $ 
+\end{lstlisting}
+将文件内容转称小写
+\begin{lstlisting}
+  hellojukay@local Linux-101-Hacks (master) $ cat hello.txt 
+  HELLO WORD
+  hellojukay@local Linux-101-Hacks (master) $ tr A-Z a-z < hello.txt 
+  hello word
+  hellojukay@local Linux-101-Hacks (master) $ 
+\end{lstlisting}
+
+
+\section*{技巧22: xargs 命令}
+xargs 是一个非常强大的命令行工具，它能将数据传给命令行参数。
+
+当你使用 rm 删除许多文件的时候，可能会出现参数太长。你可以使用 xargs 命令来避免这个问题。
+\begin{lstlisting}
+  find ~ -name '.log -print0 | xargs -I 0 rm -f 
+\end{lstlisting}
+你可以或者 /etc/ 目录下的所有的 *.conf 文件
+\begin{lstlisting}
+  find /etc/ -name *.conf | xargs ls -l
+\end{lstlisting}
+列出所有的文件地址，并且下载他们
+\begin{lstlisting}
+  cat url.txt | xargs wget -c
+\end{lstlisting}
+找到 jpg 图片，并且归档他们
+\begin{lstlisting}
+  find / -name *.jpg -type f -print | xargs tar -cvzf image.tar.gz 
+\end{lstlisting}
+复制所有的图片到外置存储\footnote{可以直接 cp *.jpg /external-hard/dir}
+\begin{lstlisting}
+  ls *jpg | xargs -n1 -i cp {} /external-hard/dir
+\end{lstlisting}
+
+
+\section*{技巧23: sort 命令}
+sort 命令排序文件中每一行，这里有一些例子向你展示如何使用 sort 命令进行排序。
+
+按照字符串升序排列
+\begin{lstlisting}
+  sort name.txt
+\end{lstlisting}
+按照字符串降序排列
+\begin{lstlisting}
+  sort -r name.txt
+\end{lstlisting}
 \end{document}
