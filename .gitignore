@@ -1,3 +1,5 @@
 *.pdf
 *.synctex.gz
 !Linux-101-Hacks.pdf
+*.aux
+*.log
