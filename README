@@ -1,1 +1,5 @@
 这是 《Linux-101-Hacks》这本书的中文翻译.
+
+# build
+ xelatex Chapter1.tex
+
