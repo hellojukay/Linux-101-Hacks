@@ -252,3 +252,90 @@ sort 命令排序文件中每一行，这里有一些例子向你展示如何使
   sort -r name.txt
 \end{lstlisting}
 \end{document}
+
+\section*{技巧23: sort命令}
+sort 命令能够排序文本文件中的每一行．下面例子是一个员工信息的文本文件:
+\begin{lstlisting}
+employee_name:employee_id:department
+\end{lstlisting}
+\begin{lstlisting}
+cat names.txt
+\end{lstlisting}
+\begin{lstlisting}
+$ sort names.txt
+Alex Jason:200:Sales
+Emma Thomas:100:Marketing
+Madison Randy:300:Product Development
+Nisha Singh:500:Sales
+Sanjay Gupta:400:Support
+\end{lstlisting}
+按照字母顺序倒序排列, -r 选项指定倒序排列
+\begin{lstlisting}
+$ sort -r names.txt
+Sanjay Gupta:400:Support
+Nisha Singh:500:Sales
+Madison Randy:300:Product Development
+Emma Thomas:100:Marketing
+\end{lstlisting}
+指定字段来进行排序，这里指定第二列
+\begin{lstlisting}
+$ sort -t: -k 2 names.txt
+Emma Thomas:100:Marketing
+Alex Jason:200:Sales
+Madison Randy:300:Product Development
+Sanjay Gupta:400:Support 
+\end{lstlisting}
+并且可以看到，我们指定 : 为分割符号,下面我们选中第三列来排序，并且去掉重复的行
+\begin{lstlisting}
+sort -t: -u -k 3 names.txt
+Emma Thomas:100:Marketing
+Madison Randy:300:Product Development
+Alex Jason:200:Sales
+Sanjay Gupta:400:Support
+\end{lstlisting}
+排序Linux系统上的password文件,指定为第三列，并且是按照数字的方式来排序
+\begin{lstlisting}
+$ sort -t: -k 3n /etc/passwd | more
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+lp:x:4:7:lp:/var/spool/lpd:/sbin/nologin
+\end{lstlisting}
+根据 ip 地址给 hosts 文件排序
+\begin{lstlisting}
+$ sort -t . -k 1,1n -k 2,2n -k 3,3n -k 4,4n /etc/hosts
+127.0.0.1 localhost.localdomain localhost
+192.168.100.101 dev-db.thegeekstuff.com dev-db
+192.168.100.102 prod-db.thegeekstuff.com prod-db
+192.168.101.20 dev-web.thegeekstuff.com dev-web
+192.168.101.21 prod-web.thegeekstuff.com prod-web
+\end{lstlisting}
+sort　命令和其他的命令结合，能发挥更大的为例
+\begin{itemize}
+\item ps -ef | sort: 排序命令行的输出
+\item ls -al | sort +4n : 根据文件大小排序，小文件在前面
+\end{itemize}
+
+\section*{技巧24: uniq 命令}
+uniq 命令通常用来配合 sort 命令一起使用，用来删除排序后重复的行,当你有一个文件包行重复行，你希望删除重复行的时候可以执行下面命令
+\begin{lstlisting}
+cat names.txt | uniq
+# 或者
+sort -u names.txt
+\end{lstlisting}
+如果想要统计一下重复的行数
+\begin{lstlisting}
+$ sort namesd.txt | uniq –c
+ 2 Alex Jason:200:Sales
+ 2 Emma Thomas:100:Marketing
+ 1 Madison Randy:300:Product Development
+ 1 Nisha Singh:500:Sales
+ 1 Sanjay Gupta:400:Support
+\end{lstlisting}
+除了统计重复行行，还可以展示重复的部署, 使用 -d 选项
+\begin{lstlisting}
+$ sort namesd.txt | uniq –cd
+ 2 Alex Jason:200:Sales
+ 2 Emma Thomas:100:Marketing
+\end{lstlisting}
